@@ -24,3 +24,12 @@ climate:
     id: "DEVICEID"
 ```
 ![image](https://user-images.githubusercontent.com/33951255/140300295-4915a18f-f5d4-4957-b513-59d7736cc52a.png)
+
+### Getting the DEVICEID
+1. Loggin to https://salus-it500.com with email and password used in the mobile app(in my case RT301i)
+2. Click in the device
+3. In the next page you will be able to see the device id in the page URL
+4. Copy the device ID from the URL
+![image](https://user-images.githubusercontent.com/33951255/140301260-151b6af9-dbc4-4e90-a14e-29018fe2e482.png)
+
+
