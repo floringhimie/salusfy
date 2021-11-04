@@ -8,6 +8,7 @@ It reads the Current Temperature, Set Temperature, Current HVAC Mode, Current Re
 
 Keep in mind this is my first custom component and this is also the first version of this Salusfy so it can have bugs. Sorry for that.
 
+**** This is not an official integration.
 ### Installation
 * If not exist, in config/custom_components/ create a directory called salusfy 
 * Copy all files in salusfy to your config/custom_components/salusfy/ directory.
