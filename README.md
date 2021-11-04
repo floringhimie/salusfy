@@ -2,7 +2,7 @@
 Custom Components for Home-Assistant (http://www.home-assistant.io)
 
 # Salus Thermostat Climate Component
-My device is RT301i Salus Thermostat, it is working with it500 thermostat, the ideea is simple if you have an Salus Thermostat and you are able to login to salus-it500.com and controll it from this page, this custom component should work.
+My device is RT301i, it is working with it500 thermostat, the ideea is simple if you have an Salus Thermostat and you are able to login to salus-it500.com and controll it from this page, this custom component should work.
 Component to interface with the salus-it500.com.
 It reads the Current Temperature, Set Temperature, Current HVAC Mode, Current Relay Mode.
 
