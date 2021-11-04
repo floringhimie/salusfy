@@ -23,3 +23,4 @@ climate:
     password: "PASSWORD"
     id: "DEVICEID"
 ```
+![image](https://user-images.githubusercontent.com/33951255/140300295-4915a18f-f5d4-4957-b513-59d7736cc52a.png)
