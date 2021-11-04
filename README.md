@@ -6,6 +6,8 @@ My device is RT301i, it is working with it500 thermostat, the ideea is simple if
 Component to interface with the salus-it500.com.
 It reads the Current Temperature, Set Temperature, Current HVAC Mode, Current Relay Mode.
 
+Keep in mind this is my first custom component and this is also the first version of this Salusfy so it can have bugs. Sorry for that.
+
 ### Installation
 * If not exist, in config/custom_components/ create a directory called salusfy 
 * Copy all files in salusfy to your config/custom_components/salusfy/ directory.
