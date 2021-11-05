@@ -4,6 +4,6 @@
   "version": "0.0.1",
   "requirements": [],
   "dependencies": [],
-  "codeowners": ["floringhimie"],
+  "codeowners": ["@floringhimie"],
   "iot_class": "cloud_polling"
 }
