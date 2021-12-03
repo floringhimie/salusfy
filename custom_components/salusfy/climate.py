@@ -168,9 +168,9 @@ class SalusThermostat(ClimateEntity):
     @property
     def hvac_action(self):
         """Return the current running hvac operation."""
-        if self._target_temperature < self._current_temperature:
-            return CURRENT_HVAC_IDLE
-        return CURRENT_HVAC_HEAT
+        if self._status == "ON"
+            return CURRENT_HVAC_HEAT
+        return CURRENT_HVAC_IDLE
         
 
     @property
