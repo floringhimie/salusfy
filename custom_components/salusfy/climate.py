@@ -225,7 +225,7 @@ class SalusThermostat(ClimateEntity):
             
     def get_token(self):
         """Get the Session Token of the Thermostat."""
-        payload = {"IDemail": self._username, "password": self._password, "login": "Login"}
+        payload = {"IDemail": self._username, "password": self._password, "login": "Login", "keep_logged_in": "1"}
         headers = {"content-type": "application/x-www-form-urlencoded"}
         
         try:
