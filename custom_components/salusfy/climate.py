@@ -1,12 +1,7 @@
 """
 Adds support for the Salus Thermostat units.
 """
-import datetime
-import time
 import logging
-import re
-import requests
-import json 
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -16,23 +11,16 @@ from homeassistant.components.climate.const import (
     ClimateEntityFeature,
 )
 from homeassistant.const import (
-    ATTR_TEMPERATURE,
     CONF_PASSWORD,
     CONF_USERNAME,
     CONF_ID,
     UnitOfTemperature,
 )
 
-try:
-    from homeassistant.components.climate import (
-        ClimateEntity,
-        PLATFORM_SCHEMA,
-    )
-except ImportError:
-    from homeassistant.components.climate import (
-        ClimateDevice as ClimateEntity,
-        PLATFORM_SCHEMA,
-    )
+from custom_components.salusfy.thermostat_entity import ThermostatEntity
+from custom_components.salusfy.web_client import WebClient
+
+from homeassistant.components.climate import PLATFORM_SCHEMA
 
 
 from homeassistant.helpers.reload import async_setup_reload_service
@@ -42,13 +30,7 @@ __version__ = "0.0.3"
 
 _LOGGER = logging.getLogger(__name__)
 
-URL_LOGIN = "https://salus-it500.com/public/login.php"
-URL_GET_TOKEN = "https://salus-it500.com/public/control.php"
-URL_GET_DATA = "https://salus-it500.com/public/ajax_device_values.php"
-URL_SET_DATA = "https://salus-it500.com/includes/set.php"
-
 DEFAULT_NAME = "Salus Thermostat"
-
 
 CONF_NAME = "name"
 
