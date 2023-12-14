@@ -1,7 +1,6 @@
 import logging
 
 from custom_components.salusfy.web_client import (
-    WebClient,
     STATE_ON
 )
 
