@@ -2,13 +2,15 @@
 Custom Components for Home-Assistant (http://www.home-assistant.io)
 
 # Salus Thermostat Climate Component
-My device is RT301i, it is working with it500 thermostat, the ideea is simple if you have a Salus Thermostat and you are able to login to salus-it500.com and controll it from this page, this custom component should work.
-Component to interface with the salus-it500.com.
+My device is RT301i, it is working with it500 thermostat, the ideea is simple if you have a Salus Thermostat and you are able to login to salus-it500.com and control it from this page, this custom component should work.
+
+## Component to interface with the salus-it500.com.
 It reads the Current Temperature, Set Temperature, Current HVAC Mode, Current Relay Mode.
 
 Keep in mind this is my first custom component and this is also the first version of this Salusfy so it can have bugs. Sorry for that.
 
 **** This is not an official integration.
+
 ### Installation
 * If not exist, in config/custom_components/ create a directory called salusfy 
 * Copy all files in salusfy to your config/custom_components/salusfy/ directory.
@@ -32,7 +34,7 @@ climate:
 
 
 ### Getting the DEVICEID
-1. Loggin to https://salus-it500.com with email and password used in the mobile app(in my case RT301i)
+1. Loggin to https://salus-it500.com with email and password used in the mobile app (in my case RT301i)
 2. Click on the device
 3. In the next page you will be able to see the device ID in the page URL
 4. Copy the device ID from the URL
@@ -40,4 +42,4 @@ climate:
 
 
 ### Known issues
-salus-it500.com server is bloking the IP of the host, in our case the HA external IP. This can be fixed with router restart in case of PPOE connection or you can try to send a mail to salus support...
+Due to how chatty the HA integration is, the salus-it500.com server may start blocking your public IP address (and rightly so). This will prevent the gateway and mobile client from connecting. This implementation aims to resolve this by suppressing requests in many circumstances. The effect of this is that the current temperature value will be out of date but the main control features (target temperature, set status etc) will still work.
