@@ -5,10 +5,14 @@
 
 from custom_components.salusfy.thermostat_entity import ThermostatEntity
 from custom_components.salusfy.web_client import WebClient
+from custom_components.salusfy.mock_web_client import MockWebClient
 
 import config
 
+# choose either client
+# client = MockWebClient()
 client = WebClient(config.USERNAME, config.PASSWORD, config.DEVICE_ID)
+
 thermostat = ThermostatEntity("thermostat", client)
 
 print("Current: " + str(thermostat.current_temperature))
