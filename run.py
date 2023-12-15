@@ -3,17 +3,49 @@
 # 2 Replace the username/password/deviceid (don't worry, this file will be ignored by git)
 # 3 Run with `python run.py`
 
-from custom_components.salusfy.thermostat_entity import ThermostatEntity
-from custom_components.salusfy.web_client import WebClient
-from custom_components.salusfy.mock_web_client import MockWebClient
+from custom_components.salusfy import climate
 
 import config
 
-# choose either client
-# client = MockWebClient()
-client = WebClient(config.USERNAME, config.PASSWORD, config.DEVICE_ID)
+class ConfigAdapter:
+    def __init__(self, config):
+        self._config = config
 
-thermostat = ThermostatEntity("thermostat", client)
+    
+    def get(self, key):
+        if (key == 'name'):
+            return 'Simulator'
+        
+        if (key == 'id'):
+            return self._config.DEVICE_ID
+        
+        if (key == 'username'):
+            return self._config.USERNAME
+
+        if (key == 'password'):
+            return self._config.PASSWORD
+
+        if (key == 'simulator'):
+            return self._config.SIMULATOR
+        
+        
+class EntityRegistry:
+    def __init__(self):
+        self._entities = []
+    
+    def register(self, list):
+        self._entities.extend(list)
+    
+    def first(self):
+        return self._entities[0]
+
+
+registry = EntityRegistry()
+config_adapter = ConfigAdapter(config)
+
+climate.setup_platform(None, config_adapter, add_entities=registry.register, discovery_info=None)
+
+thermostat = registry.first()
 
 print("Current: " + str(thermostat.current_temperature))
 print("Target: " + str(thermostat.target_temperature))
