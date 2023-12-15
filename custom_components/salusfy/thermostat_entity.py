@@ -1,7 +1,9 @@
 import logging
 
 from custom_components.salusfy.web_client import (
-    STATE_ON
+    STATE_ON,
+    MAX_TEMP,
+    MIN_TEMP
 )
 
 from homeassistant.components.climate.const import (
@@ -59,12 +61,12 @@ class ThermostatEntity(ClimateEntity):
     @property
     def min_temp(self):
         """Return the minimum temperature."""
-        return self._client.MIN_TEMP
+        return MIN_TEMP
 
     @property
     def max_temp(self):
         """Return the maximum temperature."""
-        return self._client.MAX_TEMP
+        return MAX_TEMP
 
     @property
     def temperature_unit(self):
