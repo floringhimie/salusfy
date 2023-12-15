@@ -27,7 +27,7 @@ climate:
   - platform: salusfy
     username: "EMAIL"
     password: "PASSWORD"
-    id: "DEVICEID"
+    id: "DEVICE_ID"
     entity_id: "sensor.temperature"
     access_token: "ha_long_lived_token"
 ```
@@ -35,7 +35,7 @@ climate:
 ![image](https://user-images.githubusercontent.com/33951255/140303472-fd38b9e4-5c33-408f-afef-25547c39551c.png)
 
 
-### Getting the DEVICEID
+### Getting the DEVICE_ID
 1. Loggin to https://salus-it500.com with email and password used in the mobile app (in my case RT301i)
 2. Click on the device
 3. In the next page you will be able to see the device ID in the page URL
@@ -44,4 +44,9 @@ climate:
 
 
 ### Known issues
-Due to how chatty the HA integration is, the salus-it500.com server may start blocking your public IP address (and rightly so). This will prevent the gateway and mobile client from connecting. This implementation aims to resolve this by suppressing requests in many circumstances. The effect of this is that the current temperature value will be out of date but the main control features (target temperature, set status etc) will still work.
+Due to how chatty the HA integration is, the salus-it500.com server may start blocking your public IP address (and rightly so). This will prevent the gateway and mobile client from connecting. This implementation aims to resolve this by:
+
+* suppressing requests to Salus in many circumstances
+* querying another entity for current temperature
+
+The effect of this is that the target temperature/status values may be out of date if it has been outside of HA, but the main control features (target temperature, set status etc) will still work.
