@@ -2,6 +2,7 @@ import logging
 
 from custom_components.salusfy.web_client import (
     STATE_ON,
+    STATE_OFF,
     MAX_TEMP,
     MIN_TEMP
 )
@@ -30,10 +31,11 @@ SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE
 class ThermostatEntity(ClimateEntity):
     """Representation of a Salus Thermostat device."""
 
-    def __init__(self, name, client):
+    def __init__(self, name, client, ha_client):
         """Initialize the thermostat."""
         self._name = name
         self._client = client
+        self._ha_client = ha_client
         self._state = None
         
         self.update()
@@ -76,7 +78,7 @@ class ThermostatEntity(ClimateEntity):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        return self._state.current_temperature
+        return self._ha_client.current_temperature()
 
     @property
     def target_temperature(self):
@@ -128,8 +130,21 @@ class ThermostatEntity(ClimateEntity):
         if temperature is None:
             return
         self._client.set_temperature(temperature)
+        self._state.target_temperature = temperature
 
+
+    def set_hvac_mode(self, hvac_mode):
+        """Set HVAC mode, via URL commands."""
+        if hvac_mode == HVAC_MODE_OFF:
+            self._state.current_operation_mode = STATE_OFF
+            self._state.status = STATE_OFF
+        elif hvac_mode == HVAC_MODE_HEAT:
+            self._state.current_operation_mode = STATE_ON
+            self._state.status = STATE_ON
+        self._client.set_hvac_mode(hvac_mode)
+            
 
     def update(self):
         """Get the latest state data."""
-        self._state = self._client.get_state()
+        if self._state is None:
+            self._state = self._client.get_state()

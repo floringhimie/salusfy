@@ -28,6 +28,15 @@ class ConfigAdapter:
         if (key == 'simulator'):
             return self._config.SIMULATOR
         
+        if (key == 'host'):
+            return self._config.HOST
+
+        if (key == 'entity_id'):
+            return self._config.ENTITY_ID
+
+        if (key == 'access_token'):
+            return self._config.ACCESS_TOKEN
+        
         
 class EntityRegistry:
     def __init__(self):
@@ -46,6 +55,11 @@ config_adapter = ConfigAdapter(config)
 climate.setup_platform(None, config_adapter, add_entities=registry.register, discovery_info=None)
 
 thermostat = registry.first()
+
+thermostat.update()
+thermostat.update()
+
+thermostat.set_hvac_mode('off')
 
 print("Current: " + str(thermostat.current_temperature))
 print("Target: " + str(thermostat.target_temperature))
