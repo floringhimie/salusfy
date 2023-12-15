@@ -28,6 +28,8 @@ climate:
     username: "EMAIL"
     password: "PASSWORD"
     id: "DEVICEID"
+    entity_id: "sensor.temperature"
+    access_token: "ha_long_lived_token"
 ```
 ![image](https://user-images.githubusercontent.com/33951255/140300295-4915a18f-f5d4-4957-b513-59d7736cc52a.png)
 ![image](https://user-images.githubusercontent.com/33951255/140303472-fd38b9e4-5c33-408f-afef-25547c39551c.png)
