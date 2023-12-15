@@ -36,7 +36,9 @@ except ImportError:
         PLATFORM_SCHEMA,
     )
 
-__version__ = "0.0.1"
+from homeassistant.helpers.reload import async_setup_reload_service
+
+__version__ = "0.0.2"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -56,6 +58,9 @@ MAX_TEMP = 34.5
 
 SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE
 
+DOMAIN = "salusfy"
+PLATFORMS = ["climate"]
+
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
@@ -67,15 +72,19 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
+# def setup_platform(hass, config, add_entities, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+    await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
     """Set up the E-Thermostaat platform."""
     name = config.get(CONF_NAME)
     username = config.get(CONF_USERNAME)
     password = config.get(CONF_PASSWORD)
     id = config.get(CONF_ID)
 
-    add_entities(
-        [SalusThermostat(name, username, password, id)]
+    # add_entities(
+    #     [SalusThermostat(name, username, password, id)]
+    async_add_entities(
+    [SalusThermostat(name, username, password, id)]
     )
 
 
