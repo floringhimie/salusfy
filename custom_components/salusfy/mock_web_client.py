@@ -3,8 +3,8 @@ Adds support for the Salus Thermostat units.
 """
 import logging
 
-from custom_components.salusfy.state import State
-from custom_components.salusfy.web_client import (
+from . import (
+    State,
     HVAC_MODE_HEAT,
     HVAC_MODE_OFF,
     STATE_ON,
