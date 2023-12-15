@@ -78,7 +78,7 @@ class ThermostatEntity(ClimateEntity):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        return self._ha_client.current_temperature()
+        return self._state.current_temperature
 
     @property
     def target_temperature(self):
@@ -148,3 +148,4 @@ class ThermostatEntity(ClimateEntity):
         """Get the latest state data."""
         if self._state is None:
             self._state = self._client.get_state()
+        self._state.current_temperature = self._ha_client.current_temperature()
