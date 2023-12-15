@@ -18,4 +18,14 @@ class HaWebClient:
         }
 
         response = get(url, headers=headers)
-        return float(response.json()['state'])
+        
+        body = response.json()
+        
+        if 'state' not in body:
+            return None
+        
+        state = body['state']
+        if state == 'unavailable':
+            return None
+
+        return float(state)
