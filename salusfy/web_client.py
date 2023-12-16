@@ -7,7 +7,7 @@ import re
 import requests
 import json 
 
-from custom_components.salusfy.state import State
+from .state import State
 
 HVAC_MODE_HEAT = "heat"
 HVAC_MODE_OFF = "off"

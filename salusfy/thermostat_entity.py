@@ -1,6 +1,6 @@
 import logging
 
-from custom_components.salusfy.web_client import (
+from .web_client import (
     STATE_ON,
     STATE_OFF,
     MAX_TEMP,
