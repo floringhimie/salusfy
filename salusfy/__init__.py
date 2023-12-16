@@ -11,3 +11,4 @@ from .web_client import (
 from .mock_web_client import MockWebClient
 from .thermostat_entity import ThermostatEntity
 from .ha_web_client import HaWebClient
+from .mock_ha_web_client import MockHaWebClient
