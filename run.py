@@ -5,7 +5,15 @@
 
 from custom_components.salusfy import climate
 
+from homeassistant.components.climate.const import (
+    HVAC_MODE_HEAT,
+    HVAC_MODE_OFF,
+)
+
 import config
+
+import logging
+logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 class ConfigAdapter:
     def __init__(self, config):
@@ -59,7 +67,8 @@ thermostat = registry.first()
 thermostat.update()
 thermostat.update()
 
-thermostat.set_hvac_mode('off')
+thermostat.set_hvac_mode(HVAC_MODE_HEAT)
+thermostat.set_temperature(temperature=9.8)
 
 print("Current: " + str(thermostat.current_temperature))
 print("Target: " + str(thermostat.target_temperature))

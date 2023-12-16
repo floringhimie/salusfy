@@ -126,22 +126,28 @@ class ThermostatEntity(ClimateEntity):
         
     def set_temperature(self, **kwargs):
         """Set new target temperature."""
+        
         temperature = kwargs.get(ATTR_TEMPERATURE)
+        
         if temperature is None:
             return
+        
         self._client.set_temperature(temperature)
+        
         self._state.target_temperature = temperature
 
 
     def set_hvac_mode(self, hvac_mode):
         """Set HVAC mode, via URL commands."""
+        
+        self._client.set_hvac_mode(hvac_mode)
+
         if hvac_mode == HVAC_MODE_OFF:
             self._state.current_operation_mode = STATE_OFF
             self._state.status = STATE_OFF
         elif hvac_mode == HVAC_MODE_HEAT:
             self._state.current_operation_mode = STATE_ON
             self._state.status = STATE_ON
-        self._client.set_hvac_mode(hvac_mode)
             
 
     def update(self):
