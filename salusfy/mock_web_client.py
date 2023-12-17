@@ -20,9 +20,9 @@ class MockWebClient:
     def __init__(self):
         """Initialize the client."""
         self._state = State()
-        self._state.target_temperature = 20
-        self._state.current_temperature = 15
-        self._state.frost = 10
+        self._state.target_temperature = 20.1
+        self._state.current_temperature = 15.1
+        self._state.frost = 10.1
 
 
     def set_temperature(self, temperature):
