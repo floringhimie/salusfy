@@ -9,5 +9,6 @@ class EntityRegistry:
     def entities(self):
         return self._entities
 
+    @property
     def first(self):
         return self._entities[0]
