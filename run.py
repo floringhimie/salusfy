@@ -22,7 +22,7 @@ config_adapter = ConfigAdapter(config)
 
 climate.setup_platform(None, config_adapter, add_entities=registry.register, discovery_info=None)
 
-thermostat = registry.first()
+thermostat = registry.first
 
 thermostat.update()
 thermostat.update()
