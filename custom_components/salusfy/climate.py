@@ -11,18 +11,16 @@ import json
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.components.climate.const import (
-    CURRENT_HVAC_HEAT,
-    CURRENT_HVAC_IDLE,
-    HVAC_MODE_HEAT,
-    HVAC_MODE_OFF,
-    SUPPORT_TARGET_TEMPERATURE,
+    HVACAction,
+    HVACMode,
+    ClimateEntityFeature,
 )
 from homeassistant.const import (
     ATTR_TEMPERATURE,
     CONF_PASSWORD,
     CONF_USERNAME,
     CONF_ID,
-    TEMP_CELSIUS,
+    UnitOfTemperature,
 )
 
 try:
@@ -36,7 +34,9 @@ except ImportError:
         PLATFORM_SCHEMA,
     )
 
-__version__ = "0.0.1"
+#from homeassistant.helpers.reload import async_setup_reload_service
+
+__version__ = "0.0.3"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -54,8 +54,10 @@ CONF_NAME = "name"
 MIN_TEMP = 5
 MAX_TEMP = 34.5
 
-SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE
+SUPPORT_FLAGS = ClimateEntityFeature.TARGET_TEMPERATURE
 
+DOMAIN = "salusfy"
+PLATFORMS = ["climate"]
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
@@ -133,7 +135,7 @@ class SalusThermostat(ClimateEntity):
     @property
     def temperature_unit(self):
         """Return the unit of measurement."""
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     @property
     def current_temperature(self):
@@ -151,26 +153,26 @@ class SalusThermostat(ClimateEntity):
         """Return hvac operation ie. heat, cool mode."""
         try:
             climate_mode = self._current_operation_mode
-            curr_hvac_mode = HVAC_MODE_OFF
+            curr_hvac_mode = HVACMode.OFF
             if climate_mode == "ON":
-                curr_hvac_mode = HVAC_MODE_HEAT
+                curr_hvac_mode = HVACMode.HEAT
             else:
-                curr_hvac_mode = HVAC_MODE_OFF
+                curr_hvac_mode = HVACMode.OFF
         except KeyError:
-            return HVAC_MODE_OFF
+            return HVACMode.OFF
         return curr_hvac_mode
         
     @property
     def hvac_modes(self):
         """HVAC modes."""
-        return [HVAC_MODE_HEAT, HVAC_MODE_OFF]
+        return [HVACMode.HEAT, HVACMode.OFF]
 
     @property
     def hvac_action(self):
         """Return the current running hvac operation."""
         if self._status == "ON":
-            return CURRENT_HVAC_HEAT
-        return CURRENT_HVAC_IDLE
+            return HVACAction.HEATING
+        return HVACAction.IDLE
         
 
     @property
@@ -207,14 +209,14 @@ class SalusThermostat(ClimateEntity):
         """Set HVAC mode, via URL commands."""
         
         headers = {"content-type": "application/x-www-form-urlencoded"}
-        if hvac_mode == HVAC_MODE_OFF:
+        if hvac_mode == HVACMode.OFF:
             payload = {"token": self._token, "devId": self._id, "auto": "1", "auto_setZ1": "1"}
             try:
                 if self._session.post(URL_SET_DATA, data=payload, headers=headers):
                     self._current_operation_mode = "OFF"
             except:
                 _LOGGER.error("Error Setting HVAC mode OFF.")
-        elif hvac_mode == HVAC_MODE_HEAT:
+        elif hvac_mode == HVACMode.HEAT:
             payload = {"token": self._token, "devId": self._id, "auto": "0", "auto_setZ1": "1"}
             try:
                 if self._session.post(URL_SET_DATA, data=payload, headers=headers):
