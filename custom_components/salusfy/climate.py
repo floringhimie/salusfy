@@ -35,7 +35,7 @@ except ImportError:
     )
 
 
-#from homeassistant.helpers.reload import async_setup_reload_service
+from homeassistant.helpers.reload import async_setup_reload_service
 
 __version__ = "0.0.3"
 
