@@ -257,7 +257,7 @@ class SalusThermostat(ClimateEntity):
             try:
                 if r:
                     data = json.loads(r.text)
-                    _LOGGER.info("Salusfy get_data output "+r.text)
+                    _LOGGER.info("Salusfy get_data output OK")
                     self._target_temperature = float(data["CH1currentSetPoint"])
                     self._current_temperature = float(data["CH1currentRoomTemp"])
                     self._frost = float(data["frost"])
