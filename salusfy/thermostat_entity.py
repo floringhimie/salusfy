@@ -29,11 +29,10 @@ SUPPORT_FLAGS = ClimateEntityFeature.TARGET_TEMPERATURE
 class ThermostatEntity(ClimateEntity):
     """Representation of a Salus Thermostat device."""
 
-    def __init__(self, name, client, ha_client):
+    def __init__(self, name, client):
         """Initialize the thermostat."""
         self._name = name
         self._client = client
-        self._ha_client = ha_client
         self._state = None
         
         self.update()
@@ -150,6 +149,4 @@ class ThermostatEntity(ClimateEntity):
 
     def update(self):
         """Get the latest state data."""
-        if self._state is None:
-            self._state = self._client.get_state()
-        self._state.current_temperature = self._ha_client.current_temperature()
+        self._state = self._client.get_state()

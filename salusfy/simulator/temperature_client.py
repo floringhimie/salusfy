@@ -1,5 +1,7 @@
-
-class MockHaWebClient:
+"""
+Adds support for simulating the Salus Thermostats.
+"""
+class TemperatureClient:
     def __init__(self):
         pass
 

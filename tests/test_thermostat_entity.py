@@ -21,42 +21,15 @@ def mock_client():
 
     return mock
 
-@pytest.fixture
-def mock_ha_client():
-    mock = MagicMock()
 
-    mock.configure_mock(
-        **{
-            "current_temperature.return_value": 21.1
-        }
-    )
-    
-    return mock
-
-def test_entity_returns_target_temp_from_web_client(mock_client, mock_ha_client):
-    target = ThermostatEntity('mock', mock_client, mock_ha_client)
+def test_entity_returns_target_temp_from_web_client(mock_client):
+    target = ThermostatEntity('mock', mock_client)
 
     assert target.target_temperature == 33.3
 
 
-def test_entity_returns_target_temp_from_home_assistant_client(mock_client, mock_ha_client):
-    target = ThermostatEntity('mock', mock_client, mock_ha_client)
-
-    assert target.current_temperature == 21.1
-
-
-def test_entity_call_salus_client_only_once(mock_client, mock_ha_client):
-    target = ThermostatEntity('mock', mock_client, mock_ha_client)
-
-    target.update()
-    target.update()
-
-    mock_client.get_state.assert_called_once()
-    assert target.target_temperature == 33.3
-
-
-def test_entity_delegates_set_temperature_salus_client(mock_client, mock_ha_client):
-    target = ThermostatEntity('mock', mock_client, mock_ha_client)
+def test_entity_delegates_set_temperature_web_client(mock_client):
+    target = ThermostatEntity('mock', mock_client)
 
     target.set_temperature(temperature=29.9)
 
@@ -64,8 +37,8 @@ def test_entity_delegates_set_temperature_salus_client(mock_client, mock_ha_clie
     assert target.target_temperature == 29.9
 
 
-def test_entity_delegates_set_hvac_mode_to_salus_client(mock_client, mock_ha_client):
-    target = ThermostatEntity('mock', mock_client, mock_ha_client)
+def test_entity_delegates_set_hvac_mode_to_web_client(mock_client):
+    target = ThermostatEntity('mock', mock_client)
 
     target.set_hvac_mode(hvac_mode=HVAC_MODE_HEAT)
 
