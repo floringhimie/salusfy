@@ -88,4 +88,4 @@ def create_client_from(config):
     _LOGGER.info('Registering Salus Thermostat client with Temperature client...')
 
     ha_client = HaTemperatureClient(host, entity_id, access_token)
-    return Client(web_client, ha_client)    
+    return Client(web_client, ha_client)
