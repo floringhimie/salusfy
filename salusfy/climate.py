@@ -25,7 +25,9 @@ from . import ( ThermostatEntity, WebClient, MockWebClient, HaWebClient, MockHaW
 
 from homeassistant.components.climate import PLATFORM_SCHEMA
 
-__version__ = "0.1.0"
+from homeassistant.helpers.reload import async_setup_reload_service
+
+__version__ = "0.3.0"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,6 +35,8 @@ DEFAULT_NAME = "Salus Thermostat"
 
 CONF_NAME = "name"
 
+DOMAIN = "salusfy"
+PLATFORMS = ["climate"]
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
@@ -48,10 +52,10 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 )
 
 
-# def setup_platform(hass, config, add_entities, discovery_info=None):
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+    """Set up the E-Thermostat platform."""
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
-    """Set up the E-Thermostaat platform."""
+
     name = config.get(CONF_NAME)
     username = config.get(CONF_USERNAME)
     password = config.get(CONF_PASSWORD)
@@ -63,7 +67,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     if (simulator):
         _LOGGER.info('Registering Salus simulator...')
-        add_entities(
+        async_add_entities(
             [ThermostatEntity(name, MockWebClient(), MockHaWebClient())]
         )
     else:
@@ -71,6 +75,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         web_client = WebClient(username, password, id)
         ha_client = HaWebClient(host, entity_id, access_token)
 
-        add_entities(
+        async_add_entities(
             [ThermostatEntity(name, web_client, ha_client)]
         )

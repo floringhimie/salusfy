@@ -8,17 +8,15 @@ from .web_client import (
 )
 
 from homeassistant.components.climate.const import (
-    CURRENT_HVAC_HEAT,
-    CURRENT_HVAC_IDLE,
-    HVAC_MODE_HEAT,
-    HVAC_MODE_OFF,
-    SUPPORT_PRESET_MODE,
-    SUPPORT_TARGET_TEMPERATURE
+    HVACAction,
+    HVACMode,
+    ClimateEntityFeature,
+    SUPPORT_PRESET_MODE
 )
 
 from homeassistant.const import (
     ATTR_TEMPERATURE,
-    TEMP_CELSIUS,
+    UnitOfTemperature,
 )
 
 try:
@@ -26,7 +24,7 @@ try:
 except ImportError:
     from homeassistant.components.climate import ClimateDevice as ClimateEntity
 
-SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE
+SUPPORT_FLAGS = ClimateEntityFeature.TARGET_TEMPERATURE
 
 class ThermostatEntity(ClimateEntity):
     """Representation of a Salus Thermostat device."""
@@ -73,7 +71,7 @@ class ThermostatEntity(ClimateEntity):
     @property
     def temperature_unit(self):
         """Return the unit of measurement."""
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     @property
     def current_temperature(self):
@@ -91,26 +89,26 @@ class ThermostatEntity(ClimateEntity):
         """Return hvac operation ie. heat, cool mode."""
         try:
             climate_mode = self._state.current_operation_mode
-            curr_hvac_mode = HVAC_MODE_OFF
+            curr_hvac_mode = HVACMode.OFF
             if climate_mode == STATE_ON:
-                curr_hvac_mode = HVAC_MODE_HEAT
+                curr_hvac_mode = HVACMode.HEAT
             else:
-                curr_hvac_mode = HVAC_MODE_OFF
+                curr_hvac_mode = HVACMode.OFF
         except KeyError:
-            return HVAC_MODE_OFF
+            return HVACMode.OFF
         return curr_hvac_mode
         
     @property
     def hvac_modes(self):
         """HVAC modes."""
-        return [HVAC_MODE_HEAT, HVAC_MODE_OFF]
+        return [HVACMode.HEAT, HVACMode.OFF]
 
     @property
     def hvac_action(self):
         """Return the current running hvac operation."""
         if self._state.status == STATE_ON:
-            return CURRENT_HVAC_HEAT
-        return CURRENT_HVAC_IDLE
+            return HVACAction.HEATING
+        return HVACAction.IDLE
         
 
     @property
@@ -142,10 +140,10 @@ class ThermostatEntity(ClimateEntity):
         
         self._client.set_hvac_mode(hvac_mode)
 
-        if hvac_mode == HVAC_MODE_OFF:
+        if hvac_mode == HVACMode.OFF:
             self._state.current_operation_mode = STATE_OFF
             self._state.status = STATE_OFF
-        elif hvac_mode == HVAC_MODE_HEAT:
+        elif hvac_mode == HVACMode.HEAT:
             self._state.current_operation_mode = STATE_ON
             self._state.status = STATE_ON
             
