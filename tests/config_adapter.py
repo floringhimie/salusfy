@@ -19,6 +19,9 @@ class ConfigAdapter:
         if (key == 'simulator'):
             return self._config.SIMULATOR
         
+        if (key == 'enable_temperature_client'):
+            return self._config.ENABLE_TEMPERATURE_CLIENT
+        
         if (key == 'host'):
             return self._config.HOST
 

@@ -17,6 +17,7 @@ class MockHass:
     def async_register(self, domain, service, admin_handler, schema):
         pass
 
+
 @pytest.mark.asyncio
 async def setup_climate_platform():
     registry = EntityRegistry()
