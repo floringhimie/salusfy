@@ -1,5 +1,5 @@
 
-class MockHaWebClient:
+class MockHaTemperatureClient:
     def __init__(self):
         pass
 

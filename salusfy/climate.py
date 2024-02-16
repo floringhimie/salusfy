@@ -17,7 +17,7 @@ from homeassistant.const import (
 
 CONF_SIMULATOR = 'simulator'
 
-from . import ( ThermostatEntity, WebClient, MockWebClient, HaWebClient, MockHaWebClient )
+from . import ( ThermostatEntity, Client, WebClient, MockWebClient, HaTemperatureClient, MockHaTemperatureClient )
 
 from homeassistant.components.climate import PLATFORM_SCHEMA
 
@@ -61,16 +61,17 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     host = config.get(CONF_HOST)
     access_token = config.get(CONF_ACCESS_TOKEN)
 
+    client = None
+
     if (simulator):
         _LOGGER.info('Registering Salus simulator...')
-        async_add_entities(
-            [ThermostatEntity(name, MockWebClient(), MockHaWebClient())]
-        )
+        client = Client(MockWebClient(), MockHaTemperatureClient())
     else:
         _LOGGER.info('Registering Salus Thermostat climate entity...')
         web_client = WebClient(username, password, id)
-        ha_client = HaWebClient(host, entity_id, access_token)
-
-        async_add_entities(
-            [ThermostatEntity(name, web_client, ha_client)]
-        )
+        ha_client = HaTemperatureClient(host, entity_id, access_token)
+        client = Client(web_client, ha_client)
+    
+    await async_add_entities(
+        [ThermostatEntity(name, client)]
+    )

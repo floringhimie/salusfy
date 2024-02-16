@@ -2,7 +2,8 @@ class EntityRegistry:
     def __init__(self):
         self._entities = []
     
-    def register(self, list):
+    async def register(self, list):
+        print('xxxxxxxxxxxxxxx')
         self._entities.extend(list)
     
     @property

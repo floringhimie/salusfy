@@ -3,10 +3,12 @@ Adds support for the Salus Thermostat units.
 """
 import logging
 
+from homeassistant.components.climate.const import (
+    HVACMode,
+)
+
 from . import (
     State,
-    HVAC_MODE_HEAT,
-    HVAC_MODE_OFF,
     STATE_ON,
     STATE_OFF
 )
@@ -38,9 +40,9 @@ class MockWebClient:
         
         _LOGGER.info("Setting the HVAC mode to %s...", hvac_mode)
 
-        if hvac_mode == HVAC_MODE_OFF:
+        if hvac_mode == HVACMode.OFF:
             self._state.current_operation_mode = STATE_OFF
-        elif hvac_mode == HVAC_MODE_HEAT:
+        elif hvac_mode == HVACMode.HEAT:
             self._state.current_operation_mode = STATE_ON
 
 
