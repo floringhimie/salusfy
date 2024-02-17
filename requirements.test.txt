@@ -1,4 +1,4 @@
 pytest
 pytest-mock
 pytest-asyncio
-pytest-homeassistant-custom-component
+pytest-homeassistant-custom-component @ git+https://github.com/matthewturner/pytest-homeassistant-custom-component@remove-socket-blocking
