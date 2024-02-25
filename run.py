@@ -29,7 +29,7 @@ async def main():
     await thermostat.async_update()
     await thermostat.async_update()
 
-    await thermostat.set_hvac_mode(HVACMode.Heat)
+    await thermostat.set_hvac_mode(HVACMode.HEAT)
     await thermostat.set_temperature(temperature=9.8)
 
     print("Current: " + str(thermostat.current_temperature))
@@ -37,6 +37,7 @@ async def main():
     print("HVAC Action: " + thermostat.hvac_action)
     print("HVAC Mode: " + thermostat.hvac_mode)
 
+    await thermostat.close()
 
 if __name__ ==  '__main__':
     loop = asyncio.new_event_loop()

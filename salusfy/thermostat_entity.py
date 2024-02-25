@@ -149,3 +149,8 @@ class ThermostatEntity(ClimateEntity):
     async def async_update(self):
         """Retrieve latest state data."""
         self._state = await self._client.get_state()
+    
+
+    async def close(self):
+        """Closes any client sessions held open"""
+        await self._client.close()

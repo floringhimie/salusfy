@@ -1,9 +1,8 @@
-from requests_async import get
-
 """
 Retrieves the current temperature from
 another entity from the Home Assistant API
 """
+import aiohttp
 
 class HaTemperatureClient:
     def __init__(self, host, entity_id, access_token):
@@ -22,7 +21,7 @@ class HaTemperatureClient:
             "Content-Type": "application/json",
         }
 
-        response = await get(url, headers=headers)
+        response = await aiohttp.get(url, headers=headers)
         
         body = response.json()
         

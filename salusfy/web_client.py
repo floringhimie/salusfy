@@ -4,7 +4,7 @@ Adds support for the Salus Thermostat units.
 import time
 import logging
 import re
-import requests_async as requests
+import aiohttp
 import json
 
 from .state import State
@@ -38,7 +38,7 @@ class WebClient:
         self._token = None
         self._tokenRetrievedAt = None
         
-        self._session = requests.Session()
+        self._session = aiohttp.ClientSession()
 
 
     async def set_temperature(self, temperature):
@@ -52,7 +52,7 @@ class WebClient:
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         
         try:
-            self._session.post(URL_SET_DATA, data=payload, headers=headers)
+            await self._session.post(URL_SET_DATA, data=payload, headers=headers)
             _LOGGER.info("Salusfy set_temperature: OK")
         except:
             _LOGGER.error("Error Setting the temperature.")
@@ -75,7 +75,7 @@ class WebClient:
 
         payload = {"token": token, "devId": self._id, "auto": auto, "auto_setZ1": "1"}
         try:
-            self._session.post(URL_SET_DATA, data=payload, headers=headers)
+            await self._session.post(URL_SET_DATA, data=payload, headers=headers)
         except:
             _LOGGER.error("Error Setting HVAC mode to %s", hvac_mode)
     
@@ -106,10 +106,11 @@ class WebClient:
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         
         try:
-            await self._session.post(URL_LOGIN, data=payload, headers=headers, verify=False)
+            await self._session.post(URL_LOGIN, data=payload, headers=headers)
             params = {"devId": self._id}
             getTkoken = await self._session.get(URL_GET_TOKEN, params=params)
-            result = re.search('<input id="token" type="hidden" value="(.*)" />', getTkoken.text)
+            body = await getTkoken.text()
+            result = re.search('<input id="token" type="hidden" value="(.*)" />', body)
             _LOGGER.info("Salusfy get_token OK")
             self._token = result.group(1)
             self._tokenRetrievedAt = time.time()
@@ -137,8 +138,9 @@ class WebClient:
             _LOGGER.error("Error Getting the data from Web. Please check the connection to salus-it500.com manually.")
             return None
             
-        data = json.loads(r.text)
-        _LOGGER.info("Salusfy get_data output " + r.text)
+        body = await r.text()
+        _LOGGER.info("Salusfy get_data output " + body)
+        data = json.loads(body)
 
         state = State()
         state.target_temperature = float(data["CH1currentSetPoint"])
@@ -159,3 +161,7 @@ class WebClient:
         
         return state
 
+
+    async def close(self):
+        """Closes the client session"""
+        await self._session.close()
