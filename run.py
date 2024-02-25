@@ -26,11 +26,11 @@ async def main():
 
     thermostat = registry.first
 
-    thermostat.update()
-    thermostat.update()
+    await thermostat.async_update()
+    await thermostat.async_update()
 
-    thermostat.set_hvac_mode(HVACMode.Heat)
-    thermostat.set_temperature(temperature=9.8)
+    await thermostat.set_hvac_mode(HVACMode.Heat)
+    await thermostat.set_temperature(temperature=9.8)
 
     print("Current: " + str(thermostat.current_temperature))
     print("Target: " + str(thermostat.target_temperature))

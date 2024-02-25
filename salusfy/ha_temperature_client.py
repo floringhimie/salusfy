@@ -1,4 +1,4 @@
-from requests import get
+from requests_async import get
 
 """
 Retrieves the current temperature from
@@ -12,7 +12,7 @@ class HaTemperatureClient:
         self._access_token = access_token
 
 
-    def current_temperature(self):
+    async def current_temperature(self):
         """Gets the current temperature from HA"""
 
         url = F"http://{self._host}:8123/api/states/{self._entity_id}"
@@ -22,7 +22,7 @@ class HaTemperatureClient:
             "Content-Type": "application/json",
         }
 
-        response = get(url, headers=headers)
+        response = await get(url, headers=headers)
         
         body = response.json()
         

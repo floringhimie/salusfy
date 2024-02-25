@@ -47,6 +47,6 @@ class WebClient:
             self._state.current_operation_mode = STATE_ON
 
 
-    def get_state(self):
+    async def get_state(self):
         """Retrieves the mock status"""
         return self._state

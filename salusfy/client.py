@@ -18,33 +18,31 @@ class Client:
         self._web_client = web_client
         self._temperature_client = temperature_client
 
-        self.get_state()
 
-
-    def set_temperature(self, temperature):
+    async def set_temperature(self, temperature):
         """Set new target temperature."""
         
         _LOGGER.info("Delegating set_temperature to web client...")
 
-        self._web_client.set_temperature(temperature)
+        await self._web_client.set_temperature(temperature)
 
 
-    def set_hvac_mode(self, hvac_mode):
+    async def set_hvac_mode(self, hvac_mode):
         """Set HVAC mode, via URL commands."""
         
         _LOGGER.info("Delegating set_hvac_mode to web client...")
 
-        self._web_client.set_hvac_mode(hvac_mode)
+        await self._web_client.set_hvac_mode(hvac_mode)
 
 
-    def get_state(self):
+    async def get_state(self):
         """Retrieves the status"""
         
         if self._state is None:
             _LOGGER.info("Delegating get_state to web client...")
-            self._state = self._web_client.get_state()
+            self._state = await self._web_client.get_state()
         
         _LOGGER.info("Updating current temperature from temperature client...")
-        self._state.current_temperature = self._temperature_client.current_temperature()
+        self._state.current_temperature = await self._temperature_client.current_temperature()
 
         return self._state
