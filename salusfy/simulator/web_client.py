@@ -28,7 +28,7 @@ class WebClient:
         self._state.frost = 10.1
 
 
-    def set_temperature(self, temperature):
+    async def set_temperature(self, temperature):
         """Set new target temperature."""
         
         _LOGGER.info("Setting temperature to %.1f...", temperature)
@@ -36,7 +36,7 @@ class WebClient:
         self._state.target_temperature = temperature
 
 
-    def set_hvac_mode(self, hvac_mode):
+    async def set_hvac_mode(self, hvac_mode):
         """Set HVAC mode, via URL commands."""
         
         _LOGGER.info("Setting the HVAC mode to %s...", hvac_mode)
@@ -47,6 +47,6 @@ class WebClient:
             self._state.current_operation_mode = STATE_ON
 
 
-    def get_state(self):
+    async def get_state(self):
         """Retrieves the mock status"""
         return self._state

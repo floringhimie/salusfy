@@ -4,8 +4,8 @@ Adds support for the Salus Thermostat units.
 import time
 import logging
 import re
-import requests
-import json 
+import requests_async as requests
+import json
 
 from .state import State
 
@@ -41,12 +41,12 @@ class WebClient:
         self._session = requests.Session()
 
 
-    def set_temperature(self, temperature):
+    async def set_temperature(self, temperature):
         """Set new target temperature, via URL commands."""
 
         _LOGGER.info("Setting the temperature to %.1f...", temperature)
 
-        token = self.obtain_token()
+        token = await self.obtain_token()
 
         payload = {"token": token, "devId": self._id, "tempUnit": "0", "current_tempZ1_set": "1", "current_tempZ1": temperature}
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -58,7 +58,7 @@ class WebClient:
             _LOGGER.error("Error Setting the temperature.")
 
 
-    def set_hvac_mode(self, hvac_mode):
+    async def set_hvac_mode(self, hvac_mode):
         """Set HVAC mode, via URL commands."""
         
         _LOGGER.info("Setting the HVAC mode to %s...", hvac_mode)
@@ -71,7 +71,7 @@ class WebClient:
         elif hvac_mode == HVAC_MODE_HEAT:
             auto = "0"
         
-        token = self.obtain_token()
+        token = await self.obtain_token()
 
         payload = {"token": token, "devId": self._id, "auto": auto, "auto_setZ1": "1"}
         try:
@@ -80,12 +80,12 @@ class WebClient:
             _LOGGER.error("Error Setting HVAC mode to %s", hvac_mode)
     
 
-    def obtain_token(self):
+    async def obtain_token(self):
         """Gets the existing session token of the thermostat or retrieves a new one if expired."""
 
         if self._token is None:
             _LOGGER.info("Retrieving token for the first time this session...")
-            self.get_token()
+            await self.get_token()
             return self._token
 
         if self._tokenRetrievedAt > time.time() - MAX_TOKEN_AGE_SECONDS:
@@ -93,11 +93,11 @@ class WebClient:
             return self._token
         
         _LOGGER.info("Token has expired, getting new one...")
-        self.get_token()
+        await self.get_token()
         return self._token
 
 
-    def get_token(self):
+    async def get_token(self):
         """Get the Session Token of the Thermostat."""
 
         _LOGGER.info("Getting token from Salus...")
@@ -106,29 +106,30 @@ class WebClient:
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         
         try:
-            self._session.post(URL_LOGIN, data=payload, headers=headers)
+            await self._session.post(URL_LOGIN, data=payload, headers=headers, verify=False)
             params = {"devId": self._id}
-            getTkoken = self._session.get(URL_GET_TOKEN, params=params)
+            getTkoken = await self._session.get(URL_GET_TOKEN, params=params)
             result = re.search('<input id="token" type="hidden" value="(.*)" />', getTkoken.text)
             _LOGGER.info("Salusfy get_token OK")
             self._token = result.group(1)
             self._tokenRetrievedAt = time.time()
-        except:
+        except Exception as e:
             self._token = None
             self._tokenRetrievedAt = None
             _LOGGER.error("Error getting the session token.")
+            _LOGGER.error(e)
 
 
-    def get_state(self):
+    async def get_state(self):
         """Retrieve the current state from the Salus gateway"""
 
         _LOGGER.info("Retrieving current state from Salus Gateway...")
 
-        token = self.obtain_token()
+        token = await self.obtain_token()
         
         params = {"devId": self._id, "token": token, "&_": str(int(round(time.time() * 1000)))}
         try:
-            r = self._session.get(url = URL_GET_DATA, params = params)
+            r = await self._session.get(url = URL_GET_DATA, params = params)
             if not r:
                 _LOGGER.error("Could not get data from Salus.")
                 return None

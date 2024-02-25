@@ -34,8 +34,7 @@ class ThermostatEntity(ClimateEntity):
         self._name = name
         self._client = client
         self._state = None
-        
-        self.update()
+
     
     @property
     def supported_features(self):
@@ -121,7 +120,7 @@ class ThermostatEntity(ClimateEntity):
         return SUPPORT_PRESET_MODE
         
         
-    def set_temperature(self, **kwargs):
+    async def set_temperature(self, **kwargs):
         """Set new target temperature."""
         
         temperature = kwargs.get(ATTR_TEMPERATURE)
@@ -129,15 +128,15 @@ class ThermostatEntity(ClimateEntity):
         if temperature is None:
             return
         
-        self._client.set_temperature(temperature)
+        await self._client.set_temperature(temperature)
         
         self._state.target_temperature = temperature
 
 
-    def set_hvac_mode(self, hvac_mode):
+    async def set_hvac_mode(self, hvac_mode):
         """Set HVAC mode, via URL commands."""
         
-        self._client.set_hvac_mode(hvac_mode)
+        await self._client.set_hvac_mode(hvac_mode)
 
         if hvac_mode == HVACMode.OFF:
             self._state.current_operation_mode = STATE_OFF
@@ -147,6 +146,6 @@ class ThermostatEntity(ClimateEntity):
             self._state.status = STATE_ON
             
 
-    def update(self):
-        """Get the latest state data."""
-        self._state = self._client.get_state()
+    async def async_update(self):
+        """Retrieve latest state data."""
+        self._state = await self._client.get_state()

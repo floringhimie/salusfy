@@ -38,6 +38,8 @@ async def test_entity_returns_mock_temperature():
     registry = await setup_climate_platform()
 
     thermostat = registry.first
+
+    await thermostat.async_update()
     
     assert thermostat.current_temperature == 15.9
 
@@ -47,5 +49,7 @@ async def test_entity_returns_mock_target_temperature():
     registry = await setup_climate_platform()
 
     thermostat = registry.first
+
+    await thermostat.async_update()
     
     assert thermostat.target_temperature == 20.1
