@@ -10,8 +10,7 @@ from .web_client import (
 from homeassistant.components.climate.const import (
     HVACAction,
     HVACMode,
-    ClimateEntityFeature,
-    SUPPORT_PRESET_MODE
+    ClimateEntityFeature
 )
 
 from homeassistant.const import (
@@ -117,7 +116,7 @@ class ThermostatEntity(ClimateEntity):
     @property
     def preset_modes(self):
         """Return a list of available preset modes."""
-        return SUPPORT_PRESET_MODE
+        return ClimateEntityFeature.PRESET_MODE
         
         
     async def set_temperature(self, **kwargs):
@@ -149,8 +148,3 @@ class ThermostatEntity(ClimateEntity):
     async def async_update(self):
         """Retrieve latest state data."""
         self._state = await self._client.get_state()
-    
-
-    async def close(self):
-        """Closes any client sessions held open"""
-        await self._client.close()

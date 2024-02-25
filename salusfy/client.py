@@ -46,8 +46,3 @@ class Client:
         self._state.current_temperature = await self._temperature_client.current_temperature()
 
         return self._state
-
-    
-    async def close(self):
-        """Closes the client session"""
-        await self._web_client.close()

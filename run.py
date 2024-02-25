@@ -9,9 +9,7 @@ from tests.test_climate import MockHass
 from tests.config_adapter import ConfigAdapter
 from tests.entity_registry import EntityRegistry
 
-from homeassistant.components.climate.const import (
-    HVACMode
-)
+from homeassistant.components.climate.const import HVACMode
 
 import config
 
@@ -37,7 +35,6 @@ async def main():
     print("HVAC Action: " + thermostat.hvac_action)
     print("HVAC Mode: " + thermostat.hvac_mode)
 
-    await thermostat.close()
 
 if __name__ ==  '__main__':
     loop = asyncio.new_event_loop()

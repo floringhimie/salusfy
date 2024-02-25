@@ -21,15 +21,17 @@ class HaTemperatureClient:
             "Content-Type": "application/json",
         }
 
-        response = await aiohttp.get(url, headers=headers)
-        
-        body = response.json()
-        
-        if 'state' not in body:
-            return None
-        
-        state = body['state']
-        if state == 'unavailable':
-            return None
 
-        return float(state)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=headers) as response:
+        
+                body = await response.json()
+        
+                if 'state' not in body:
+                    return None
+                
+                state = body['state']
+                if state == 'unavailable':
+                    return None
+
+                return float(state)
