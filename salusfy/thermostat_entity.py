@@ -32,6 +32,8 @@ class ThermostatEntity(ClimateEntity):
         self._name = name
         self._client = client
 
+        self._enable_turn_on_off_backwards_compatibility = False
+
     
     @property
     def supported_features(self):
