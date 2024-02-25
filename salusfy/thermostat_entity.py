@@ -7,6 +7,8 @@ from .web_client import (
     MIN_TEMP
 )
 
+from .state import State
+
 from homeassistant.components.climate.const import (
     HVACAction,
     HVACMode,
@@ -32,7 +34,7 @@ class ThermostatEntity(ClimateEntity):
         """Initialize the thermostat."""
         self._name = name
         self._client = client
-        self._state = None
+        self._state = State()
 
     
     @property
@@ -144,6 +146,14 @@ class ThermostatEntity(ClimateEntity):
             self._state.current_operation_mode = STATE_ON
             self._state.status = STATE_ON
             
+    
+    async def turn_off(self) -> None:
+        await self.set_hvac_mode(HVACAction.OFF)
+
+
+    async def turn_on(self) -> None:
+        await self.set_hvac_mode(HVACAction.HEATING)
+
 
     async def async_update(self):
         """Retrieve latest state data."""

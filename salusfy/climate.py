@@ -44,7 +44,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Required(CONF_PASSWORD): cv.string,
         vol.Required(CONF_ID): cv.string,
         vol.Optional(CONF_SIMULATOR, default=False): cv.boolean,
-        vol.Optional(CONF_ENABLE_TEMPERATURE_CLIENT, default=True): cv.boolean,
+        vol.Optional(CONF_ENABLE_TEMPERATURE_CLIENT, default=False): cv.boolean,
         vol.Required(CONF_ENTITY_ID): cv.string,
         vol.Required(CONF_ACCESS_TOKEN): cv.string,
         vol.Optional(CONF_HOST, default='localhost'): cv.string
@@ -57,11 +57,9 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
     client = create_client_from(config)
-
-    await client.get_state()
     
     name = config.get(CONF_NAME)
-    await async_add_entities(
+    async_add_entities(
         [ThermostatEntity(name, client)]
     )
 
