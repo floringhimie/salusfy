@@ -27,8 +27,8 @@ async def main():
     await thermostat.async_update()
     await thermostat.async_update()
 
-    await thermostat.set_hvac_mode(HVACMode.HEAT)
-    await thermostat.set_temperature(temperature=9.8)
+    await thermostat.async_set_hvac_mode(HVACMode.HEAT)
+    await thermostat.async_set_temperature(temperature=9.8)
 
     print("Current: " + str(thermostat.current_temperature))
     print("Target: " + str(thermostat.target_temperature))

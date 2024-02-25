@@ -7,8 +7,6 @@ from .web_client import (
     MIN_TEMP
 )
 
-from .state import State
-
 from homeassistant.components.climate.const import (
     HVACAction,
     HVACMode,
@@ -25,7 +23,6 @@ try:
 except ImportError:
     from homeassistant.components.climate import ClimateDevice as ClimateEntity
 
-SUPPORT_FLAGS = ClimateEntityFeature.TARGET_TEMPERATURE
 
 class ThermostatEntity(ClimateEntity):
     """Representation of a Salus Thermostat device."""
@@ -34,13 +31,12 @@ class ThermostatEntity(ClimateEntity):
         """Initialize the thermostat."""
         self._name = name
         self._client = client
-        self._state = State()
 
     
     @property
     def supported_features(self):
         """Return the list of supported features."""
-        return SUPPORT_FLAGS
+        return ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.TURN_ON | ClimateEntityFeature.TURN_OFF
 
     @property
     def name(self):
@@ -121,7 +117,7 @@ class ThermostatEntity(ClimateEntity):
         return ClimateEntityFeature.PRESET_MODE
         
         
-    async def set_temperature(self, **kwargs):
+    async def async_set_temperature(self, **kwargs) -> None:
         """Set new target temperature."""
         
         temperature = kwargs.get(ATTR_TEMPERATURE)
@@ -134,7 +130,7 @@ class ThermostatEntity(ClimateEntity):
         self._state.target_temperature = temperature
 
 
-    async def set_hvac_mode(self, hvac_mode):
+    async def async_set_hvac_mode(self, hvac_mode) -> None:
         """Set HVAC mode, via URL commands."""
         
         await self._client.set_hvac_mode(hvac_mode)
@@ -147,12 +143,12 @@ class ThermostatEntity(ClimateEntity):
             self._state.status = STATE_ON
             
     
-    async def turn_off(self) -> None:
-        await self.set_hvac_mode(HVACAction.OFF)
+    async def async_turn_off(self) -> None:
+        await self.async_set_hvac_mode(HVACMode.OFF)
 
 
-    async def turn_on(self) -> None:
-        await self.set_hvac_mode(HVACAction.HEATING)
+    async def async_turn_on(self) -> None:
+        await self.async_set_hvac_mode(HVACMode.HEAT)
 
 
     async def async_update(self):

@@ -33,7 +33,7 @@ async def test_entity_delegates_set_temperature_web_client(mock_client):
 
     await target.async_update()
 
-    await target.set_temperature(temperature=29.9)
+    await target.async_set_temperature(temperature=29.9)
 
     mock_client.set_temperature.assert_called_once_with(29.9)
     assert target.target_temperature == 29.9
@@ -45,7 +45,7 @@ async def test_entity_delegates_set_hvac_mode_to_web_client(mock_client):
 
     await target.async_update()
 
-    await target.set_hvac_mode(hvac_mode=HVACMode.HEAT)
+    await target.async_set_hvac_mode(hvac_mode=HVACMode.HEAT)
 
     mock_client.set_hvac_mode.assert_called_once_with(HVACMode.HEAT)
     assert target.hvac_mode == HVACMode.HEAT

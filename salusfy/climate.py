@@ -60,7 +60,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     
     name = config.get(CONF_NAME)
     async_add_entities(
-        [ThermostatEntity(name, client)]
+        [ThermostatEntity(name, client)], update_before_add=True
     )
 
 

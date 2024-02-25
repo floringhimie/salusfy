@@ -34,6 +34,13 @@ async def test_entity_is_registered():
 
 
 @pytest.mark.asyncio
+async def test_entity_is_updated_before_added():
+    registry = await setup_climate_platform()
+    
+    assert registry.update_before_add == True
+
+
+@pytest.mark.asyncio
 async def test_entity_returns_mock_temperature():
     registry = await setup_climate_platform()
 
