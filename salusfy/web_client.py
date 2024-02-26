@@ -9,8 +9,7 @@ import json
 
 from .state import State
 
-HVAC_MODE_HEAT = "heat"
-HVAC_MODE_OFF = "off"
+from homeassistant.components.climate.const import HVACMode
 
 STATE_ON = "ON"
 STATE_OFF = "OFF"
@@ -65,9 +64,9 @@ class WebClient:
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
         auto = "1"
-        if hvac_mode == HVAC_MODE_OFF:
+        if hvac_mode == HVACMode.OFF:
             auto = "1"
-        elif hvac_mode == HVAC_MODE_HEAT:
+        elif hvac_mode == HVACMode.HEAT:
             auto = "0"
         
         async with aiohttp.ClientSession() as session:

@@ -3,9 +3,7 @@ Adds support for simulating the Salus Thermostats.
 """
 import logging
 
-from homeassistant.components.climate.const import (
-    HVACMode,
-)
+from homeassistant.components.climate.const import HVACMode
 
 from .. import (
     State,
