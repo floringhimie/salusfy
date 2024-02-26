@@ -4,5 +4,5 @@ class State:
         self.current_temperature = None
         self.target_temperature = None
         self.frost = None
-        self.status = None
-        self.current_operation_mode = None
+        self.action = None
+        self.mode = None

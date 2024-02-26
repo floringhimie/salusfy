@@ -9,10 +9,11 @@ import json
 
 from .state import State
 
-from homeassistant.components.climate.const import HVACMode
+from homeassistant.components.climate.const import (
+    HVACMode,
+    HVACAction,
+)
 
-STATE_ON = "ON"
-STATE_OFF = "OFF"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -134,15 +135,15 @@ class WebClient:
         
         status = data['CH1heatOnOffStatus']
         if status == "1":
-            state.status = STATE_ON
+            state.action = HVACAction.HEATING
         else:
-            state.status = STATE_OFF
+            state.action = HVACAction.IDLE
         
         mode = data['CH1heatOnOff']
         if mode == "1":
-            state.current_operation_mode = STATE_OFF
+            state.mode = HVACMode.OFF
         else:
-            state.current_operation_mode = STATE_ON
+            state.mode = HVACMode.HEAT
         
         return state
 

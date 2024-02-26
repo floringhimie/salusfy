@@ -5,11 +5,7 @@ import logging
 
 from homeassistant.components.climate.const import HVACMode
 
-from .. import (
-    State,
-    STATE_ON,
-    STATE_OFF
-)
+from ..state import State
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -39,10 +35,7 @@ class WebClient:
         
         _LOGGER.info("Setting the HVAC mode to %s...", hvac_mode)
 
-        if hvac_mode == HVACMode.OFF:
-            self._state.current_operation_mode = STATE_OFF
-        elif hvac_mode == HVACMode.HEAT:
-            self._state.current_operation_mode = STATE_ON
+        self._state.mode = hvac_mode
 
 
     async def get_state(self):

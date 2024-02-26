@@ -1,8 +1,6 @@
 import logging
 
 from .web_client import (
-    STATE_ON,
-    STATE_OFF,
     MAX_TEMP,
     MIN_TEMP
 )
@@ -10,7 +8,8 @@ from .web_client import (
 from homeassistant.components.climate.const import (
     HVACAction,
     HVACMode,
-    ClimateEntityFeature
+    ClimateEntityFeature,
+    PRESET_NONE,
 )
 
 from homeassistant.const import (
@@ -84,35 +83,28 @@ class ThermostatEntity(ClimateEntity):
     @property
     def hvac_mode(self):
         """Return hvac operation ie. heat, cool mode."""
-        try:
-            climate_mode = self._state.current_operation_mode
-            curr_hvac_mode = HVACMode.OFF
-            if climate_mode == STATE_ON:
-                curr_hvac_mode = HVACMode.HEAT
-            else:
-                curr_hvac_mode = HVACMode.OFF
-        except KeyError:
-            return HVACMode.OFF
-        return curr_hvac_mode
+
+        return self._state.mode
+
         
     @property
     def hvac_modes(self):
         """HVAC modes."""
         return [HVACMode.HEAT, HVACMode.OFF]
 
+
     @property
     def hvac_action(self):
         """Return the current running hvac operation."""
-        if self._state.status == STATE_ON:
-            return HVACAction.HEATING
-        return HVACAction.IDLE
+        return self._state.action
         
 
     @property
     def preset_mode(self):
         """Return the current preset mode, e.g., home, away, temp."""
-        return self._state.status
-        
+        return PRESET_NONE
+
+
     @property
     def preset_modes(self):
         """Return a list of available preset modes."""
@@ -137,12 +129,7 @@ class ThermostatEntity(ClimateEntity):
         
         await self._client.set_hvac_mode(hvac_mode)
 
-        if hvac_mode == HVACMode.OFF:
-            self._state.current_operation_mode = STATE_OFF
-            self._state.status = STATE_OFF
-        elif hvac_mode == HVACMode.HEAT:
-            self._state.current_operation_mode = STATE_ON
-            self._state.status = STATE_ON
+        self._state.mode = hvac_mode
             
     
     async def async_turn_off(self) -> None:
