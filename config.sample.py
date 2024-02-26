@@ -7,6 +7,8 @@ USERNAME = "replace"
 PASSWORD = "replace"
 DEVICE_ID = "replace"
 
-SIMULATOR = True
-ENABLE_TEMPERATURE_CLIENT = True
-HOST = "192.168.0.9"
+SIMULATOR = False
+ENABLE_TEMPERATURE_CLIENT = False
+HOST = "your-home-assistant-ip-address"
+ENTITY_ID = "sensor.your-temperature-sensor"
+ACCESS_TOKEN = "your-HA-access-token"
