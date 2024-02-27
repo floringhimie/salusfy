@@ -17,10 +17,14 @@ class ConfigAdapter:
             return self._config.PASSWORD
 
         if (key == 'simulator'):
-            return self._config.SIMULATOR
+            if hasattr(self._config, 'SIMULATOR'):
+                return self._config.SIMULATOR
+            return False
         
         if (key == 'enable_temperature_client'):
-            return self._config.ENABLE_TEMPERATURE_CLIENT
+            if hasattr(self._config, 'ENABLE_TEMPERATURE_CLIENT'):
+                return self._config.ENABLE_TEMPERATURE_CLIENT
+            return False
         
         if (key == 'host'):
             return self._config.HOST
