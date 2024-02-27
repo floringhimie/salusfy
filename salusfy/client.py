@@ -7,6 +7,11 @@ import logging
 from .web_client import WebClient
 from .ha_temperature_client import HaTemperatureClient
 
+from homeassistant.components.climate.const import (
+    HVACMode,
+    HVACAction
+)
+
 _LOGGER = logging.getLogger(__name__)
 
 class Client:
@@ -26,6 +31,10 @@ class Client:
 
         await self._web_client.set_temperature(temperature)
 
+        self._state.target_temperature = temperature
+        
+        self.assume_hvac_action()
+
 
     async def set_hvac_mode(self, hvac_mode):
         """Set HVAC mode, via URL commands."""
@@ -33,6 +42,25 @@ class Client:
         _LOGGER.info("Delegating set_hvac_mode to web client...")
 
         await self._web_client.set_hvac_mode(hvac_mode)
+
+        self._state.mode = hvac_mode
+
+        self.assume_hvac_action()
+
+
+    def assume_hvac_action(self):
+        if self._state.mode == HVACMode.OFF:
+            _LOGGER.info("Assuming action is IDLE...")
+            self._state.action = HVACAction.IDLE
+            return
+
+        if self._state.target_temperature > self._state.current_temperature:
+            _LOGGER.info("Assuming action is HEATING based on target temperature...")
+            self._state.action = HVACAction.HEATING
+            return
+
+        _LOGGER.info("Assuming action is IDLE based on target temperature...")
+        self._state.action = HVACAction.IDLE
 
 
     async def get_state(self):
