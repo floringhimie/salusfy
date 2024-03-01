@@ -16,6 +16,7 @@ import config
 import logging
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
+
 async def main():
     registry = EntityRegistry()
     config_adapter = ConfigAdapter(config)
@@ -36,7 +37,7 @@ async def main():
     print("HVAC Mode: " + thermostat.hvac_mode)
 
 
-if __name__ ==  '__main__':
+if __name__ == '__main__':
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     loop.run_until_complete(main())

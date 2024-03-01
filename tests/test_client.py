@@ -1,18 +1,20 @@
-import pytest
 from unittest.mock import Mock
+import pytest
 
-from salusfy import ( Client, State, WebClient, HaTemperatureClient )
 from homeassistant.components.climate.const import (
     HVACMode,
     HVACAction
 )
+
+from salusfy import (Client, State, WebClient, HaTemperatureClient)
+
 
 @pytest.fixture
 def mock_client():
     state = State()
     state.current_temperature = 15.3
     state.target_temperature = 33.3
-    
+
     mock = Mock(WebClient)
     mock.get_state.return_value = state
 
@@ -24,7 +26,7 @@ def mock_ha_client():
     mock = Mock(HaTemperatureClient)
 
     mock.current_temperature.return_value = 21.1
-    
+
     return mock
 
 
@@ -42,7 +44,7 @@ async def test_client_returns_target_temp_from_home_assistant_client(mock_client
     target = Client(mock_client, mock_ha_client)
 
     actual = await target.get_state()
-    
+
     assert actual.current_temperature == 21.1
 
 
@@ -90,7 +92,7 @@ async def test_client_assumes_hvac_action_as_idle_when_mode_is_off(mock_client, 
     await target.set_hvac_mode(hvac_mode=HVACMode.OFF)
 
     actual = await target.get_state()
-    
+
     assert actual.action == HVACAction.IDLE
 
 
@@ -103,7 +105,7 @@ async def test_client_sets_hvac_mode(mock_client, mock_ha_client):
     await target.set_hvac_mode(hvac_mode=HVACMode.OFF)
 
     actual = await target.get_state()
-    
+
     assert actual.mode == HVACMode.OFF
 
 
@@ -117,7 +119,7 @@ async def test_client_assumes_hvac_action_as_heat_when_mode_is_heat_and_target_t
     await target.set_hvac_mode(hvac_mode=HVACMode.HEAT)
 
     actual = await target.get_state()
-    
+
     assert actual.action == HVACAction.HEATING
 
 
@@ -131,7 +133,7 @@ async def test_client_assumes_hvac_action_as_idle_when_mode_is_heat_and_target_t
     await target.set_hvac_mode(hvac_mode=HVACMode.HEAT)
 
     actual = await target.get_state()
-    
+
     assert actual.action == HVACAction.IDLE
 
 
@@ -145,7 +147,7 @@ async def test_client_assumes_hvac_action_as_heat_when_mode_is_heat_and_target_t
     await target.set_temperature(temperature=33)
 
     actual = await target.get_state()
-    
+
     assert actual.action == HVACAction.HEATING
 
 
@@ -159,5 +161,5 @@ async def test_client_assumes_hvac_action_as_idle_when_mode_is_heat_and_target_t
     await target.set_temperature(temperature=4)
 
     actual = await target.get_state()
-    
+
     assert actual.action == HVACAction.IDLE

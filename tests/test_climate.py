@@ -6,14 +6,15 @@ from .entity_registry import EntityRegistry
 
 from . import mock_config
 
+
 class MockHass:
     @property
     def services(self):
         return self
-    
+
     def has_service(self, domain, service):
         return False
-    
+
     def async_register(self, domain, service, admin_handler, schema):
         pass
 
@@ -29,15 +30,15 @@ async def setup_climate_platform():
 @pytest.mark.asyncio
 async def test_entity_is_registered():
     registry = await setup_climate_platform()
-    
+
     assert len(registry.entities) == 1
 
 
 @pytest.mark.asyncio
 async def test_entity_is_updated_before_added():
     registry = await setup_climate_platform()
-    
-    assert registry.update_before_add == True
+
+    assert registry.update_before_add
 
 
 @pytest.mark.asyncio
@@ -47,7 +48,7 @@ async def test_entity_returns_mock_temperature():
     thermostat = registry.first
 
     await thermostat.async_update()
-    
+
     assert thermostat.current_temperature == 15.9
 
 
@@ -58,5 +59,5 @@ async def test_entity_returns_mock_target_temperature():
     thermostat = registry.first
 
     await thermostat.async_update()
-    
+
     assert thermostat.target_temperature == 20.1

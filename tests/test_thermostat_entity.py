@@ -1,17 +1,18 @@
 import pytest
 from unittest.mock import Mock
 
-from salusfy import ( ThermostatEntity, State, WebClient )
+from salusfy import (ThermostatEntity, State, WebClient)
 from homeassistant.components.climate.const import (
     HVACMode
 )
+
 
 @pytest.fixture
 def mock_client():
     state = State()
     state.current_temperature = 15.3
     state.target_temperature = 33.3
-    
+
     mock = Mock(WebClient)
     mock.get_state.return_value = state
 

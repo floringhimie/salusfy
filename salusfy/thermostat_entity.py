@@ -78,37 +78,31 @@ class ThermostatEntity(ClimateEntity):
         """Return the temperature we try to reach."""
         return self._state.target_temperature
 
-
     @property
     def hvac_mode(self) -> HVACMode:
         """Return hvac operation ie. heat, cool mode."""
 
         return self._state.mode
 
-
     @property
     def hvac_modes(self) -> list[HVACMode]:
         """HVAC modes."""
         return [HVACMode.HEAT, HVACMode.OFF]
 
-
     @property
     def hvac_action(self) -> HVACAction:
         """Return the current running hvac operation."""
         return self._state.action
- 
 
     @property
     def preset_mode(self) -> str:
         """Return the current preset mode, e.g., home, away, temp."""
         return PRESET_NONE
 
-
     @property
     def preset_modes(self) -> list[str]:
         """Return a list of available preset modes."""
         return [PRESET_NONE]
-
 
     async def async_set_temperature(self, **kwargs) -> None:
         """Set new target temperature."""
@@ -122,22 +116,18 @@ class ThermostatEntity(ClimateEntity):
 
         self._state.target_temperature = temperature
 
-
-    async def async_set_hvac_mode(self, hvac_mode : HVACMode) -> None:
+    async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set HVAC mode, via URL commands."""
 
         await self._client.set_hvac_mode(hvac_mode)
 
         self._state.mode = hvac_mode
 
-
     async def async_turn_off(self) -> None:
         await self.async_set_hvac_mode(HVACMode.OFF)
 
-
     async def async_turn_on(self) -> None:
         await self.async_set_hvac_mode(HVACMode.HEAT)
-
 
     async def async_update(self) -> None:
         """Retrieve latest state data."""

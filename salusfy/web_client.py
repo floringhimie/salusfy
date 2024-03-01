@@ -27,6 +27,7 @@ MIN_TEMP = 5
 MAX_TEMP = 34.5
 MAX_TOKEN_AGE_SECONDS = 60 * 10
 
+
 class WebClient:
     """Adapter around Salus IT500 web application."""
 
@@ -38,7 +39,6 @@ class WebClient:
         self._token = None
         self._tokenRetrievedAt = None
 
-
     async def set_temperature(self, temperature: float) -> None:
         """Set new target temperature, via URL commands."""
 
@@ -47,21 +47,25 @@ class WebClient:
         async with aiohttp.ClientSession() as session:
             token = await self.obtain_token(session)
 
-            payload = {"token": token, "devId": self._id, "tempUnit": "0", "current_tempZ1_set": "1", "current_tempZ1": temperature}
+            payload = {
+                "token": token,
+                "devId": self._id,
+                "tempUnit": "0",
+                "current_tempZ1_set": "1",
+                "current_tempZ1": temperature}
             headers = {"Content-Type": "application/x-www-form-urlencoded"}
-            
+
             try:
                 await session.post(URL_SET_DATA, data=payload, headers=headers)
                 _LOGGER.info("Salusfy set_temperature: OK")
-            except:
+            except BaseException:
                 _LOGGER.error("Error Setting the temperature.")
 
-
-    async def set_hvac_mode(self, hvac_mode : HVACMode) -> None:
+    async def set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set HVAC mode, via URL commands."""
-        
+
         _LOGGER.info("Setting the HVAC mode to %s...", hvac_mode)
-        
+
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
         auto = "1"
@@ -69,18 +73,21 @@ class WebClient:
             auto = "1"
         elif hvac_mode == HVACMode.HEAT:
             auto = "0"
-        
+
         async with aiohttp.ClientSession() as session:
             token = await self.obtain_token(session)
 
-            payload = {"token": token, "devId": self._id, "auto": auto, "auto_setZ1": "1"}
+            payload = {
+                "token": token,
+                "devId": self._id,
+                "auto": auto,
+                "auto_setZ1": "1"}
             try:
                 await session.post(URL_SET_DATA, data=payload, headers=headers)
-            except:
+            except BaseException:
                 _LOGGER.error("Error Setting HVAC mode to %s", hvac_mode)
-    
 
-    async def obtain_token(self, session : str) -> str:
+    async def obtain_token(self, session: str) -> str:
         """Gets the existing session token of the thermostat or retrieves a new one if expired."""
 
         if self._token is None:
@@ -91,26 +98,30 @@ class WebClient:
         if self._tokenRetrievedAt > time.time() - MAX_TOKEN_AGE_SECONDS:
             _LOGGER.info("Using cached token...")
             return self._token
-        
+
         _LOGGER.info("Token has expired, getting new one...")
         await self.get_token(session)
         return self._token
 
-
-    async def get_token(self, session : str) -> None:
+    async def get_token(self, session: str) -> None:
         """Get the Session Token of the Thermostat."""
 
         _LOGGER.info("Getting token from Salus...")
 
-        payload = {"IDemail": self._username, "password": self._password, "login": "Login", "keep_logged_in": "1"}
+        payload = {
+            "IDemail": self._username,
+            "password": self._password,
+            "login": "Login",
+            "keep_logged_in": "1"}
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        
+
         try:
             await session.post(URL_LOGIN, data=payload, headers=headers)
             params = {"devId": self._id}
             getTkoken = await session.get(URL_GET_TOKEN, params=params)
             body = await getTkoken.text()
-            result = re.search('<input id="token" type="hidden" value="(.*)" />', body)
+            result = re.search(
+                '<input id="token" type="hidden" value="(.*)" />', body)
             _LOGGER.info("Salusfy get_token OK")
             self._token = result.group(1)
             self._tokenRetrievedAt = time.time()
@@ -119,7 +130,6 @@ class WebClient:
             self._tokenRetrievedAt = None
             _LOGGER.error("Error getting the session token.")
             _LOGGER.error(e)
-
 
     async def get_state(self) -> State:
         """Retrieve the current state from the Salus gateway"""
@@ -132,21 +142,20 @@ class WebClient:
         state.target_temperature = float(data["CH1currentSetPoint"])
         state.current_temperature = float(data["CH1currentRoomTemp"])
         state.frost = float(data["frost"])
-        
+
         status = data['CH1heatOnOffStatus']
         if status == "1":
             state.action = HVACAction.HEATING
         else:
             state.action = HVACAction.IDLE
-        
+
         mode = data['CH1heatOnOff']
         if mode == "1":
             state.mode = HVACMode.OFF
         else:
             state.mode = HVACMode.HEAT
-        
-        return state
 
+        return state
 
     async def get_state_data(self) -> dict:
         """Retrieves the raw state from the Salus gateway"""
@@ -155,19 +164,21 @@ class WebClient:
 
         async with aiohttp.ClientSession() as session:
             token = await self.obtain_token(session)
-        
-            params = {"devId": self._id, "token": token, "&_": str(int(round(time.time() * 1000)))}
+
+            params = {"devId": self._id, "token": token,
+                      "&_": str(int(round(time.time() * 1000)))}
             try:
-                r = await session.get(url = URL_GET_DATA, params = params)
+                r = await session.get(url=URL_GET_DATA, params=params)
                 if not r:
                     _LOGGER.error("Could not get data from Salus.")
                     return None
-            except:
-                _LOGGER.error("Error Getting the data from Web. Please check the connection to salus-it500.com manually.")
+            except BaseException:
+                _LOGGER.error(
+                    "Error Getting the data from Web. Please check the connection to salus-it500.com manually.")
                 return None
-                
+
             body = await r.text()
-            _LOGGER.info("Salusfy get_data output " + body)
+            _LOGGER.info("Salusfy get_data output %s", body)
             data = json.loads(body)
 
             return data
