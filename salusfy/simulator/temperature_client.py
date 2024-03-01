@@ -5,5 +5,5 @@ class TemperatureClient:
     def __init__(self):
         pass
 
-    async def current_temperature(self):
+    async def current_temperature(self) -> float:
         return 15.9

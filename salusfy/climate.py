@@ -18,7 +18,12 @@ from homeassistant.const import (
 CONF_SIMULATOR = 'simulator'
 CONF_ENABLE_TEMPERATURE_CLIENT = 'enable_temperature_client'
 
-from . import ( ThermostatEntity, Client, WebClient, HaTemperatureClient )
+from . import ( 
+    ThermostatEntity,
+    Client,
+    WebClient,
+    HaTemperatureClient,
+)
 
 from . import simulator
 
@@ -64,7 +69,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     )
 
 
-def create_client_from(config):
+def create_client_from(config) -> Client:
     username = config.get(CONF_USERNAME)
     password = config.get(CONF_PASSWORD)
     id = config.get(CONF_ID)
