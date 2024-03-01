@@ -36,7 +36,9 @@ class ThermostatEntity(ClimateEntity):
     @property
     def supported_features(self) -> ClimateEntityFeature:
         """Return the list of supported features."""
-        return ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.TURN_ON | ClimateEntityFeature.TURN_OFF
+        return (ClimateEntityFeature.TARGET_TEMPERATURE
+                | ClimateEntityFeature.TURN_ON
+                | ClimateEntityFeature.TURN_OFF)
 
     @property
     def name(self) -> str:

@@ -1,10 +1,8 @@
-import pytest
 from unittest.mock import Mock
+from homeassistant.components.climate.const import HVACMode
+import pytest
 
 from salusfy import (ThermostatEntity, State, WebClient)
-from homeassistant.components.climate.const import (
-    HVACMode
-)
 
 
 @pytest.fixture

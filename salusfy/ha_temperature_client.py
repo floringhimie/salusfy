@@ -1,11 +1,11 @@
-"""
-Retrieves the current temperature from
-another entity from the Home Assistant API
-"""
+"""Reduces reliance on the Salus API"""
 import aiohttp
 
-
 class HaTemperatureClient:
+    """
+    Retrieves the current temperature from
+    another entity from the Home Assistant API
+    """
     def __init__(self, host, entity_id, access_token):
         self._entity_id = entity_id
         self._host = host

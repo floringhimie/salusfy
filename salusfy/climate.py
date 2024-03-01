@@ -1,19 +1,12 @@
 """
 Adds support for the Salus Thermostat units.
 """
-from . import (
-    ThermostatEntity,
-    Client,
-    WebClient,
-    HaTemperatureClient,
-)
+import logging
 from homeassistant.helpers.reload import async_setup_reload_service
 from homeassistant.components.climate import PLATFORM_SCHEMA
-from . import simulator
-import logging
+import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
-import voluptuous as vol
 
 from homeassistant.const import (
     CONF_PASSWORD,
@@ -22,6 +15,14 @@ from homeassistant.const import (
     CONF_ENTITY_ID,
     CONF_ACCESS_TOKEN,
     CONF_HOST
+)
+
+from . import simulator
+from . import (
+    ThermostatEntity,
+    Client,
+    WebClient,
+    HaTemperatureClient,
 )
 
 CONF_SIMULATOR = 'simulator'
@@ -66,6 +67,9 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the E-Thermostat platform."""
+
+    _LOGGER.info("Discovery info: %s", discovery_info)
+
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
     client = create_client_from(config)
@@ -77,9 +81,11 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 
 def create_client_from(config) -> Client:
+    """Creates a client object based on the specified configuration"""
+    
     username = config.get(CONF_USERNAME)
     password = config.get(CONF_PASSWORD)
-    id = config.get(CONF_ID)
+    device_id = config.get(CONF_ID)
     enable_simulator = config.get(CONF_SIMULATOR)
 
     if enable_simulator:
@@ -87,7 +93,7 @@ def create_client_from(config) -> Client:
 
         return Client(simulator.WebClient(), simulator.TemperatureClient())
 
-    web_client = WebClient(username, password, id)
+    web_client = WebClient(username, password, device_id)
 
     enable_temperature_client = config.get(CONF_ENABLE_TEMPERATURE_CLIENT)
 

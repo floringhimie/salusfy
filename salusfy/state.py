@@ -1,9 +1,12 @@
+"""Exposes state of the thermostat."""
+
+import dataclasses
+
+@dataclasses.dataclass
 class State:
     """The state of the thermostat."""
-
-    def __init__(self):
-        self.current_temperature = None
-        self.target_temperature = None
-        self.frost = None
-        self.action = None
-        self.mode = None
+    current_temperature = None
+    target_temperature = None
+    frost = None
+    action = None
+    mode = None
