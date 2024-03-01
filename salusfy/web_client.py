@@ -4,16 +4,15 @@ Adds support for the Salus Thermostat units.
 import time
 import logging
 import re
-import aiohttp
 import json
-
-from .state import State
+import aiohttp
 
 from homeassistant.components.climate.const import (
     HVACMode,
     HVACAction,
 )
 
+from .state import State
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,13 +30,13 @@ MAX_TOKEN_AGE_SECONDS = 60 * 10
 class WebClient:
     """Adapter around Salus IT500 web application."""
 
-    def __init__(self, username, password, id):
+    def __init__(self, username: str, password: str, device_id: str):
         """Initialize the client."""
         self._username = username
         self._password = password
-        self._id = id
+        self._id = device_id
         self._token = None
-        self._tokenRetrievedAt = None
+        self._token_retrieved_at = None
 
     async def set_temperature(self, temperature: float) -> None:
         """Set new target temperature, via URL commands."""
@@ -95,7 +94,7 @@ class WebClient:
             await self.get_token(session)
             return self._token
 
-        if self._tokenRetrievedAt > time.time() - MAX_TOKEN_AGE_SECONDS:
+        if self._token_retrieved_at > time.time() - MAX_TOKEN_AGE_SECONDS:
             _LOGGER.info("Using cached token...")
             return self._token
 
@@ -118,16 +117,16 @@ class WebClient:
         try:
             await session.post(URL_LOGIN, data=payload, headers=headers)
             params = {"devId": self._id}
-            getTkoken = await session.get(URL_GET_TOKEN, params=params)
-            body = await getTkoken.text()
+            token_response = await session.get(URL_GET_TOKEN, params=params)
+            body = await token_response.text()
             result = re.search(
                 '<input id="token" type="hidden" value="(.*)" />', body)
             _LOGGER.info("Salusfy get_token OK")
             self._token = result.group(1)
-            self._tokenRetrievedAt = time.time()
+            self._token_retrieved_at = time.time()
         except Exception as e:
             self._token = None
-            self._tokenRetrievedAt = None
+            self._token_retrieved_at = None
             _LOGGER.error("Error getting the session token.")
             _LOGGER.error(e)
 

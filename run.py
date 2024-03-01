@@ -4,16 +4,18 @@
 # 3 Run with `python run.py`
 
 import asyncio
+import logging
+
+from homeassistant.components.climate.const import HVACMode
+
 from salusfy import climate
 from tests.test_climate import MockHass
 from tests.config_adapter import ConfigAdapter
 from tests.entity_registry import EntityRegistry
 
-from homeassistant.components.climate.const import HVACMode
 
 import config
 
-import logging
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 

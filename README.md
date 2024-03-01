@@ -1,4 +1,7 @@
 # Home-Assistant Custom Components
+
+[![CI](https://github.com/matthewturner/salusfy/actions/workflows/ci.yml/badge.svg)](https://github.com/matthewturner/salusfy/actions/workflows/ci.yml)
+
 Custom Components for Home-Assistant (http://www.home-assistant.io)
 
 # Salus Thermostat Climate Component
