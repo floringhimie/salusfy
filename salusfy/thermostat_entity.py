@@ -1,10 +1,3 @@
-import logging
-
-from .web_client import (
-    MAX_TEMP,
-    MIN_TEMP
-)
-
 from homeassistant.components.climate.const import (
     HVACAction,
     HVACMode,
@@ -15,6 +8,11 @@ from homeassistant.components.climate.const import (
 from homeassistant.const import (
     ATTR_TEMPERATURE,
     UnitOfTemperature,
+)
+
+from .web_client import (
+    MAX_TEMP,
+    MIN_TEMP
 )
 
 try:
@@ -31,9 +29,10 @@ class ThermostatEntity(ClimateEntity):
         self._name = name
         self._client = client
 
+        self._state = None
+
         self._enable_turn_on_off_backwards_compatibility = False
 
-    
     @property
     def supported_features(self) -> ClimateEntityFeature:
         """Return the list of supported features."""
@@ -43,7 +42,7 @@ class ThermostatEntity(ClimateEntity):
     def name(self) -> str:
         """Return the name of the thermostat."""
         return self._name
-        
+
     @property
     def unique_id(self) -> str:
         """Return the unique ID for this thermostat."""
@@ -86,7 +85,7 @@ class ThermostatEntity(ClimateEntity):
 
         return self._state.mode
 
-        
+
     @property
     def hvac_modes(self) -> list[HVACMode]:
         """HVAC modes."""
@@ -97,7 +96,7 @@ class ThermostatEntity(ClimateEntity):
     def hvac_action(self) -> HVACAction:
         """Return the current running hvac operation."""
         return self._state.action
-        
+ 
 
     @property
     def preset_mode(self) -> str:
@@ -106,32 +105,32 @@ class ThermostatEntity(ClimateEntity):
 
 
     @property
-    def preset_modes(self):
+    def preset_modes(self) -> list[str]:
         """Return a list of available preset modes."""
-        return ClimateEntityFeature.PRESET_MODE
-        
-        
+        return [PRESET_NONE]
+
+
     async def async_set_temperature(self, **kwargs) -> None:
         """Set new target temperature."""
-        
+
         temperature = kwargs.get(ATTR_TEMPERATURE)
-        
+
         if temperature is None:
             return
-        
+
         await self._client.set_temperature(temperature)
-        
+
         self._state.target_temperature = temperature
 
 
     async def async_set_hvac_mode(self, hvac_mode : HVACMode) -> None:
         """Set HVAC mode, via URL commands."""
-        
+
         await self._client.set_hvac_mode(hvac_mode)
 
         self._state.mode = hvac_mode
-            
-    
+
+
     async def async_turn_off(self) -> None:
         await self.async_set_hvac_mode(HVACMode.OFF)
 
