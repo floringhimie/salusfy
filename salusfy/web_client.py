@@ -137,6 +137,11 @@ class WebClient:
 
         data = await self.get_state_data()
 
+        return WebClient.convert_to_state(data)
+
+    @classmethod
+    def convert_to_state(cls, data: dict) -> State:
+        """Converts the data payload to a state object"""
         state = State()
         state.target_temperature = float(data["CH1currentSetPoint"])
         state.current_temperature = float(data["CH1currentRoomTemp"])
@@ -148,11 +153,15 @@ class WebClient:
         else:
             state.action = HVACAction.IDLE
 
-        mode = data['CH1heatOnOff']
-        if mode == "1":
-            state.mode = HVACMode.OFF
+        heat_on_off = data['CH1heatOnOff']
+        auto_mode = data['CH1autoMode']
+        if heat_on_off == "0" and auto_mode == "0":
+            state.mode = HVACMode.AUTO
         else:
-            state.mode = HVACMode.HEAT
+            if heat_on_off == "1":
+                state.mode = HVACMode.OFF
+            else:
+                state.mode = HVACMode.HEAT
 
         return state
 
