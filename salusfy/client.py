@@ -4,12 +4,15 @@ the retrieval of current temperature by calling
 a specialized client.
 """
 import logging
-from .web_client import WebClient
-from .ha_temperature_client import HaTemperatureClient
+from . import (
+    WebClient,
+    HaTemperatureClient,
+    State,
+)
 
 from homeassistant.components.climate.const import (
     HVACMode,
-    HVACAction
+    HVACAction,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -24,7 +27,7 @@ class Client:
         self._temperature_client = temperature_client
 
 
-    async def set_temperature(self, temperature):
+    async def set_temperature(self, temperature : float) -> None:
         """Set new target temperature."""
         
         _LOGGER.info("Delegating set_temperature to web client...")
@@ -36,7 +39,7 @@ class Client:
         self.assume_hvac_action()
 
 
-    async def set_hvac_mode(self, hvac_mode):
+    async def set_hvac_mode(self, hvac_mode : HVACMode) -> None:
         """Set HVAC mode, via URL commands."""
         
         _LOGGER.info("Delegating set_hvac_mode to web client...")
@@ -48,7 +51,7 @@ class Client:
         self.assume_hvac_action()
 
 
-    def assume_hvac_action(self):
+    def assume_hvac_action(self) -> None:
         if self._state.mode == HVACMode.OFF:
             _LOGGER.info("Assuming action is IDLE...")
             self._state.action = HVACAction.IDLE
@@ -63,7 +66,7 @@ class Client:
         self._state.action = HVACAction.IDLE
 
 
-    async def get_state(self):
+    async def get_state(self) -> State:
         """Retrieves the status"""
         
         if self._state is None:

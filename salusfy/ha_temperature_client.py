@@ -11,7 +11,7 @@ class HaTemperatureClient:
         self._access_token = access_token
 
 
-    async def current_temperature(self):
+    async def current_temperature(self) -> float:
         """Gets the current temperature from HA"""
 
         url = F"http://{self._host}:8123/api/states/{self._entity_id}"

@@ -39,7 +39,7 @@ class WebClient:
         self._tokenRetrievedAt = None
 
 
-    async def set_temperature(self, temperature):
+    async def set_temperature(self, temperature: float) -> None:
         """Set new target temperature, via URL commands."""
 
         _LOGGER.info("Setting the temperature to %.1f...", temperature)
@@ -57,7 +57,7 @@ class WebClient:
                 _LOGGER.error("Error Setting the temperature.")
 
 
-    async def set_hvac_mode(self, hvac_mode):
+    async def set_hvac_mode(self, hvac_mode : HVACMode) -> None:
         """Set HVAC mode, via URL commands."""
         
         _LOGGER.info("Setting the HVAC mode to %s...", hvac_mode)
@@ -80,7 +80,7 @@ class WebClient:
                 _LOGGER.error("Error Setting HVAC mode to %s", hvac_mode)
     
 
-    async def obtain_token(self, session):
+    async def obtain_token(self, session : str) -> str:
         """Gets the existing session token of the thermostat or retrieves a new one if expired."""
 
         if self._token is None:
@@ -97,7 +97,7 @@ class WebClient:
         return self._token
 
 
-    async def get_token(self, session):
+    async def get_token(self, session : str) -> None:
         """Get the Session Token of the Thermostat."""
 
         _LOGGER.info("Getting token from Salus...")
@@ -121,7 +121,7 @@ class WebClient:
             _LOGGER.error(e)
 
 
-    async def get_state(self):
+    async def get_state(self) -> State:
         """Retrieve the current state from the Salus gateway"""
 
         _LOGGER.info("Retrieving current state from Salus Gateway...")
@@ -148,7 +148,7 @@ class WebClient:
         return state
 
 
-    async def get_state_data(self):
+    async def get_state_data(self) -> dict:
         """Retrieves the raw state from the Salus gateway"""
 
         _LOGGER.info("Retrieving raw state from Salus Gateway...")

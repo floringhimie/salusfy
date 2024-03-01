@@ -3,7 +3,7 @@ class ConfigAdapter:
         self._config = config
 
     
-    def get(self, key):
+    def get(self, key : str) -> any:
         if (key == 'name'):
             return 'Simulator'
         
