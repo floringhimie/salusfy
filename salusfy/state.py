@@ -2,6 +2,7 @@
 
 import dataclasses
 
+
 @dataclasses.dataclass
 class State:
     """The state of the thermostat."""

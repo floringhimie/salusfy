@@ -82,7 +82,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 def create_client_from(config) -> Client:
     """Creates a client object based on the specified configuration"""
-    
+
     username = config.get(CONF_USERNAME)
     password = config.get(CONF_PASSWORD)
     device_id = config.get(CONF_ID)
