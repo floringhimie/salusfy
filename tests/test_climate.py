@@ -6,13 +6,19 @@ from .entity_registry import EntityRegistry
 
 from . import mock_config
 
+# pylint: disable=missing-function-docstring
+
 
 class MockHass:
+    """Mocks the HASS for use during unit tests."""
     @property
     def services(self):
         return self
 
-    def has_service(self, domain, service):
+    def has_service(self,
+                    domain,  # pylint: disable=unused-argument
+                    service,  # pylint: disable=unused-argument
+                    ):
         return False
 
     def async_register(self, domain, service, admin_handler, schema):
@@ -23,7 +29,10 @@ class MockHass:
 async def setup_climate_platform():
     registry = EntityRegistry()
     config_adapter = ConfigAdapter(mock_config)
-    await climate.async_setup_platform(MockHass(), config_adapter, async_add_entities=registry.register, discovery_info=None)
+    await climate.async_setup_platform(MockHass(),
+                                       config_adapter,
+                                       async_add_entities=registry.register,
+                                       discovery_info=None)
     return registry
 
 

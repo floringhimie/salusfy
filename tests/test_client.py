@@ -8,9 +8,11 @@ from homeassistant.components.climate.const import (
 
 from salusfy import (Client, State, WebClient, HaTemperatureClient)
 
+# pylint: disable=missing-function-docstring
 
-@pytest.fixture
-def mock_client():
+
+@pytest.fixture(name="mock_client")
+def mock_client_fixture():
     state = State()
     state.current_temperature = 15.3
     state.target_temperature = 33.3
@@ -21,8 +23,8 @@ def mock_client():
     return mock
 
 
-@pytest.fixture
-def mock_ha_client():
+@pytest.fixture(name="mock_ha_client")
+def mock_ha_client_fixture():
     mock = Mock(HaTemperatureClient)
 
     mock.current_temperature.return_value = 21.1
@@ -110,7 +112,9 @@ async def test_client_sets_hvac_mode(mock_client, mock_ha_client):
 
 
 @pytest.mark.asyncio
-async def test_client_assumes_hvac_action_as_heat_when_mode_is_heat_and_target_temp_is_high(mock_client, mock_ha_client):
+async def test_client_assumes_hvac_action_as_heat_when_mode_is_heat_and_target_temp_is_high(
+        mock_client, mock_ha_client):
+
     target = Client(mock_client, mock_ha_client)
 
     await target.get_state()
@@ -124,7 +128,9 @@ async def test_client_assumes_hvac_action_as_heat_when_mode_is_heat_and_target_t
 
 
 @pytest.mark.asyncio
-async def test_client_assumes_hvac_action_as_idle_when_mode_is_heat_and_target_temp_is_low(mock_client, mock_ha_client):
+async def test_client_assumes_hvac_action_as_idle_when_mode_is_heat_and_target_temp_is_low(
+        mock_client, mock_ha_client):
+
     target = Client(mock_client, mock_ha_client)
 
     await target.get_state()
@@ -138,7 +144,9 @@ async def test_client_assumes_hvac_action_as_idle_when_mode_is_heat_and_target_t
 
 
 @pytest.mark.asyncio
-async def test_client_assumes_hvac_action_as_heat_when_mode_is_heat_and_target_temp_is_set_high(mock_client, mock_ha_client):
+async def test_client_assumes_hvac_action_as_heat_when_mode_is_heat_and_target_temp_is_set_high(
+        mock_client, mock_ha_client):
+
     target = Client(mock_client, mock_ha_client)
 
     await target.get_state()
@@ -152,7 +160,9 @@ async def test_client_assumes_hvac_action_as_heat_when_mode_is_heat_and_target_t
 
 
 @pytest.mark.asyncio
-async def test_client_assumes_hvac_action_as_idle_when_mode_is_heat_and_target_temp_is_set_low(mock_client, mock_ha_client):
+async def test_client_assumes_hvac_action_as_idle_when_mode_is_heat_and_target_temp_is_set_low(
+        mock_client, mock_ha_client):
+
     target = Client(mock_client, mock_ha_client)
 
     await target.get_state()

@@ -182,7 +182,7 @@ class WebClient:
                     return None
             except BaseException:
                 _LOGGER.error(
-                    "Error Getting the data from Web. Please check the connection to salus-it500.com manually.")
+                    "Error Getting the data from Salus. Check the connection to salus-it500.com.")
                 return None
 
             body = await r.text()

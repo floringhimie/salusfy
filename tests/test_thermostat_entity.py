@@ -4,12 +4,14 @@ import pytest
 
 from salusfy import (ThermostatEntity, State, WebClient)
 
+# pylint: disable=missing-function-docstring
 
-@pytest.fixture
-def mock_client():
+
+@pytest.fixture(name="mock_client")
+def mock_client_fixture():
     state = State()
-    state.current_temperature = 15.3
-    state.target_temperature = 33.3
+    state.current_temperature = 15.2
+    state.target_temperature = 33.2
 
     mock = Mock(WebClient)
     mock.get_state.return_value = state
@@ -23,7 +25,7 @@ async def test_entity_returns_target_temp_from_web_client(mock_client):
 
     await target.async_update()
 
-    assert target.target_temperature == 33.3
+    assert target.target_temperature == 33.2
 
 
 @pytest.mark.asyncio

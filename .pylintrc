@@ -1,0 +1,6 @@
+ [MAIN]
+ ignore-paths=
+    config.py
+
+disable=
+    missing-module-docstring

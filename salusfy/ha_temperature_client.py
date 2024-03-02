@@ -1,6 +1,8 @@
 """Reduces reliance on the Salus API"""
 import aiohttp
 
+# pylint: disable=too-few-public-methods
+
 
 class HaTemperatureClient:
     """

@@ -7,9 +7,11 @@ from homeassistant.components.climate.const import (
 
 from salusfy import WebClient
 
+# pylint: disable=missing-function-docstring
 
-@pytest.fixture
-def payload() -> dict:
+
+@pytest.fixture(name="payload")
+def payload_fixture() -> dict:
     """Returns the default data for the tests"""
     return {
         'CH1currentSetPoint': 20.1,

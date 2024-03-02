@@ -1,3 +1,6 @@
+# pylint: disable=too-few-public-methods
+# pylint: disable=too-many-return-statements
+
 class ConfigAdapter:
     """Simulates how Home Assistant loads configuration"""
 
@@ -37,3 +40,5 @@ class ConfigAdapter:
 
         if key == 'access_token':
             return self._config.ACCESS_TOKEN
+
+        return 'Unknown'
